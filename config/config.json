@@ -1,0 +1,13 @@
+{
+  "entries": [
+    {
+      "entry": "./lib/webparts/kseTicketSignups/KseTicketSignupsWebPart.js",
+      "manifest": "./src/webparts/kseTicketSignups/KseTicketSignupsWebPart.manifest.json",
+      "outputPath": "./dist/kse-ticket-signups.bundle.js"
+    }
+  ],
+  "externals": {},
+  "localizedResources": {
+    "kseTicketSignupsStrings": "webparts/kseTicketSignups/loc/{locale}.js"
+  }
+}

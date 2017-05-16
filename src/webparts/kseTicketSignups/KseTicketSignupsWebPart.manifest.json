@@ -1,0 +1,20 @@
+{
+  "$schema": "../../../node_modules/@microsoft/sp-module-interfaces/lib/manifestSchemas/jsonSchemas/clientSideComponentManifestSchema.json",
+
+  "id": "322ba67b-d514-4f38-b385-77898d43300c",
+  "alias": "KseTicketSignupsWebPart",
+  "componentType": "WebPart",
+  "version": "0.0.1",
+  "manifestVersion": 2,
+
+  "preconfiguredEntries": [{
+    "groupId": "322ba67b-d514-4f38-b385-77898d43300c",
+    "group": { "default": "Under Development" },
+    "title": { "default": "KSE Ticket Signups" },
+    "description": { "default": "This app allows for KSE Employees to request comp tickets to games according to the Comp Ticket Policy housed on K1." },
+    "officeFabricIconFontName": "Page",
+    "properties": {
+      "listName": ""
+    }
+  }]
+}

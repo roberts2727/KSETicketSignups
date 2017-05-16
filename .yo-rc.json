@@ -1,0 +1,8 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "libraryName": "kse-ticket-signups",
+    "framework": "none",
+    "version": "1.0.2",
+    "libraryId": "4edcb66b-be8c-4abd-97a5-f572a12359b8"
+  }
+}
