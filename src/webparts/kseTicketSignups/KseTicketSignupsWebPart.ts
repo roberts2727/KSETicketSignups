@@ -67,8 +67,6 @@ export interface ISPList {
                 </span>
             </li>
         </ul>`;
-        this.setButtonsState();
-          
       } 
         else{
       html += `
@@ -76,24 +74,11 @@ export interface ISPList {
             <li class="${styles.listItem}">
                 <span class="ms-font-l">${item.Title}<br>${item.Day}<br>${item.jcaa}<br>Tickets Allotted: ${item.Alloted}<br>Tickets Remaining: ${item.Remaining}<br>Sorry, Game is Closed.</span>
             </li>
-        </ul>`;
-            }});
+        </ul>`;}
+                    });
        const listContainer: Element = this.domElement.querySelector('#spListContainer');
        listContainer.innerHTML = html;
       }
-      
-  private _renderListAsync(): void {
-    
-      this._getListItemData()
-        .then((response) => {
-          this._renderList(response.value);
-          console.log(response.value);
-          this.setButtonsEventHandlers();
-        });
-         
-      }
-      
-
   public render(): void {
      this.domElement.innerHTML = `
       <div class="${styles.helloWorld}">
@@ -111,10 +96,16 @@ export interface ISPList {
         </div>  
         <div id="spListContainer" />
       </div>`;
-            
-    this._renderListAsync();
+     this._getListItemData()
+          .then((response) => {
+          this._renderList(response.value);
+          console.log(response.value);
+          this.setButtonsEventHandlers();
+          this.setButtonsState();
+                         
+        });
     }
-   
+    
   private setButtonsState(): void {
     const buttons: NodeListOf<Element> = this.domElement.querySelectorAll(`button.${styles.button}`);
     const listNotConfigured: boolean = this.listNotConfigured();
