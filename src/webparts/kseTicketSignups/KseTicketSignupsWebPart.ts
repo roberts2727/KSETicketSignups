@@ -29,21 +29,11 @@ export interface ISPList {
     Register:{Description: string, Url: string};
     Alloted: number;
     Remaining: number;
-    seats: number;
     
   }
   export default class KseTicketSignupsWebPart extends BaseClientSideWebPart<IKseTicketSignupsWebPartProps> {
    
-  protected onInit(): Promise<void> {
-    return new Promise<void>((resolve: () => void, reject: (error?: any) => void): void => {
-      pnp.setup({
-        headers: {
-          'Accept': 'application/json;odata=nometadata'
-        }
-      });
-      resolve();
-    });
-  }
+ 
  private _getListItemData(): Promise<ISPLists> {
    return this.context.spHttpClient.get(this.context.pageContext.web.absoluteUrl + `/_api/web/lists/GetByTitle('Games')/items`, SPHttpClient.configurations.v1)
       .then((response: SPHttpClientResponse) => {
