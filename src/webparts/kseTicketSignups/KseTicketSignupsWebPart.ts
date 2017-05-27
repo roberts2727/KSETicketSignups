@@ -41,34 +41,24 @@ export interface ISPList {
    });
  }
  private _renderList(items: ISPList[]): void {
-   
-    let html: string = '';
-    items.forEach((item: ISPList) => {
       
-      
-      if(item.Remaining>0){
-      html += `
-        <ul class="${styles.list}">
-            <li class="${styles.listItem}">
-                <span class="ms-font-l">${item.Title}<br>${item.Day}<br>${item.jcaa}<br>Tickets Allotted: ${item.Alloted}<br>Tickets Remaining: ${item.Remaining}<br>
-                  <button class="${styles.button} update-Button">
-            <span class="${styles.label}">Register!</span>
-          </button>
+   this.domElement.querySelector('#spListContainer').innerHTML = 
+  items.reduce((html: string, item: ISPList) => {
+      let Remaining = `<button itemid="${item.Id}" button class="${styles.button} update-Button">
+                         <span class="${styles.label}">Register!</span>
+                       </button>`;
+      if (item.Remaining === 0) Remaining = 'Sorry, Game is Closed.';
+      return html += `<li class="${styles.listItem}">
+                <span class="ms-font-l">${item.Title}
+                  <br>${item.Day}
+                  <br>${item.jcaa}
+                  <br>Tickets Allotted: ${item.Alloted}
+                  <br>Tickets Remaining: ${item.Remaining}
+                  <br>${Remaining}
                 </span>
-            </li>
-        </ul>`;
-      } 
-        else{
-      html += `
-        <ul class="${styles.list}">
-            <li class="${styles.listItem}">
-                <span class="ms-font-l">${item.Title}<br>${item.Day}<br>${item.jcaa}<br>Tickets Allotted: ${item.Alloted}<br>Tickets Remaining: ${item.Remaining}<br>Sorry, Game is Closed.</span>
-            </li>
-        </ul>`;}
-                    });
-       const listContainer: Element = this.domElement.querySelector('#spListContainer');
-       listContainer.innerHTML = html;
-      }
+            </li>`;
+    }, `<ul class="${styles.list}"><!--Items go here-->`) + "</ul>";}
+
   public render(): void {
      this.domElement.innerHTML = `
       <div class="${styles.helloWorld}">
@@ -112,16 +102,10 @@ export interface ISPList {
   }
   
   private setButtonsEventHandlers(): void {
-    const webPart: KseTicketSignupsWebPart = this;
-    const buttons: NodeListOf<Element> = this.domElement.querySelectorAll(`button.${styles.button}`);
-    
-    for (let i: number = 0; i < buttons.length; i++) {
-      const button: Element = buttons.item(i);
-      button.addEventListener('click', () => { webPart.updateItem(); });
-  }}
-  protected get dataVersion(): Version {
-    return Version.parse('1.0');
-  }
+    this.domElement.querySelectorAll("button."+styles.button)
+        .forEach(button=>button.addEventListener(
+                 'click', (event) => this.updateItem(event.target));
+}
 
   protected getPropertyPaneConfiguration(): IPropertyPaneConfiguration {
     return {
