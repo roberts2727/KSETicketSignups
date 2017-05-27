@@ -113,8 +113,12 @@ export interface ISPList {
   
   private setButtonsEventHandlers(): void {
     const webPart: KseTicketSignupsWebPart = this;
-    this.domElement.querySelector('button.update-Button').addEventListener('click', () => { webPart.updateItem(); });
-  }
+    const buttons: NodeListOf<Element> = this.domElement.querySelectorAll(`button.${styles.button}`);
+    
+    for (let i: number = 0; i < buttons.length; i++) {
+      const button: Element = buttons.item(i);
+      button.addEventListener('click', () => { webPart.updateItem(); });
+  }}
   protected get dataVersion(): Version {
     return Version.parse('1.0');
   }
