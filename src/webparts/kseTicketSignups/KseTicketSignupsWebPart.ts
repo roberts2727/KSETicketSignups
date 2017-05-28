@@ -47,7 +47,7 @@ export interface ISPList {
       let Remaining = `<button itemid="${item.Id}" button class="${styles.button} update-Button">
                          <span class="${styles.label}">Register!</span>
                        </button>`;
-      if (item.Remaining === 0) Remaining = 'Sorry, Game is Closed.';
+      if (item.Remaining <= 0) Remaining = 'Sorry, Game is Closed.';
       return html += `<li class="${styles.listItem}">
                 <span class="ms-font-l">${item.Title}
                   <br>${item.Day}
@@ -101,11 +101,12 @@ export interface ISPList {
     }
   }
   
-  private setButtonsEventHandlers(): void {
-    this.domElement.querySelectorAll("button."+styles.button)
-        .forEach(button=>button.addEventListener(
-                 'click', (event) => this.updateItem(event.target));
+   private setButtonsEventHandlers(): void {
+    this.domElement.querySelector(`button.${styles.button}`)
+          addEventListener("click", (event) => this.updateItem());
 }
+
+
 
   protected getPropertyPaneConfiguration(): IPropertyPaneConfiguration {
     return {
