@@ -103,7 +103,7 @@ export interface ISPList {
   
    private setButtonsEventHandlers(): void {
     this.domElement.querySelector(`button.${styles.button}`)
-          addEventListener("click", (event) => this.updateItem());
+          addEventListener("click", (event) => this.updateItem(event.target));
 }
 
 
