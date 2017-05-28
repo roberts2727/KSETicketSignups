@@ -101,9 +101,10 @@ export interface ISPList {
     }
   }
   
-   private setButtonsEventHandlers(): void {
-    this.domElement.querySelector(`button.${styles.button}`)
-          addEventListener("click", (event) => this.updateItem());
+ private setButtonsEventHandlers(): void {
+    var arr = Array.from(this.domElement.querySelectorAll("button."+styles.button));
+        arr.forEach(button=>button.addEventListener(
+                 'click', () => this.updateItem()));
 }
 
 
