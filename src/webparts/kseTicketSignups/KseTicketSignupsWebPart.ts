@@ -44,8 +44,8 @@ export interface ISPList {
       
    this.domElement.querySelector('#spListContainer').innerHTML = 
   items.reduce((html: string, item: ISPList) => {
-      let Remaining = `<button itemid="${item.Id}" button class="${styles.button} update-Button">
-                         <span class="${styles.label}">Register!</span>
+      let Remaining = `<button id="${item.Id}" button class="${styles.button} update-Button">
+                         Register!
                        </button>`;
       if (item.Remaining <= 0) Remaining = 'Sorry, Game is Closed.';
       return html += `<li class="${styles.listItem}">
@@ -104,7 +104,7 @@ export interface ISPList {
  private setButtonsEventHandlers(): void {
     var arr = Array.from(this.domElement.querySelectorAll("button."+styles.button));
         arr.forEach(button=>button.addEventListener(
-                 'click', () => this.updateItem()));
+                 'click', (event) => this.updateItem(button.id)));
 }
 
 
@@ -134,7 +134,7 @@ export interface ISPList {
    private getLatestItemId(): Promise<number> {
     return new Promise<number>((resolve: (itemId: number) => void, reject: (error: any) => void): void => {
       pnp.sp.web.lists.getByTitle(this.properties.listName)
-        .items.orderBy('Id', true).top(1).select('Id').get()
+        .items.orderBy('Id', true).select('Id').get()
         .then((items: { Id: number }[]): void => {
           if (items.length === 0) {
             resolve(-1);
@@ -149,32 +149,35 @@ export interface ISPList {
   }
 
   
-  private updateItem(): void {
+  private updateItem(id): void {
    
-    let latestItemId: number = undefined;
+   
+    let latestItemId: number = id;
     let etag: string = undefined;
+    console.log(id);
+    
 
     this.getLatestItemId()
-      .then((itemId: number): Promise<Item> => {
-        if (itemId === -1) {
+      .then((latestItemId: number): Promise<Item> => {
+        if (latestItemId === -1) {
           throw new Error('No items found in the list');
         }
 
-        latestItemId = itemId;
+        latestItemId = id;
           return pnp.sp.web.lists.getByTitle(this.properties.listName)
-          .items.getById(itemId).get(undefined, {
+          .items.getById(latestItemId).get(undefined, {
             headers: {
               'Accept': 'application/json;odata=minimalmetadata'
             }
           });
       })
       .then((item: Item): Promise<ISPList> => {
-        etag = item["odata.etag"];
+        
         return Promise.resolve((item as any) as ISPList);
       })
       .then((item: ISPList): Promise<ItemUpdateResult> => {
         return pnp.sp.web.lists.getByTitle(this.properties.listName)
-          .items.getById(item.Id).update({
+          .items.getById(latestItemId).update({
             'Remaining' : `${item.Remaining - 1}`
           }, etag);
       })
