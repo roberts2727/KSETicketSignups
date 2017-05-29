@@ -15,7 +15,7 @@ import {
   SPHttpClientResponse   
 } from '@microsoft/sp-http';
 import pnp from "sp-pnp-js";
-import { Item, ItemUpdateResult } from '../../../node_modules/sp-pnp-js/lib/sharepoint/items';
+import { Item, ItemAddResult, ItemUpdateResult } from '../../../node_modules/sp-pnp-js/lib/sharepoint/items';
 import { ISPList } from './KseTicketSignupsWebPart';
 export interface ISPLists {
     value: ISPList[];
@@ -25,7 +25,7 @@ export interface ISPList {
     Title: string;
     Id: number;
     Day: string;
-    jcaa: Date;
+    GameTime: Date;
     Register:{Description: string, Url: string};
     Alloted: number;
     Remaining: number;
@@ -49,9 +49,9 @@ export interface ISPList {
                        </button>`;
       if (item.Remaining <= 0) Remaining = 'Sorry, Game is Closed.';
       return html += `<li class="${styles.listItem}">
-                <span class="ms-font-l">${item.Title}
+                <span class="ms-font-l"><h4>${item.Title}</h4>
                   <br>${item.Day}
-                  <br>${item.jcaa}
+                  <br>${item.GameTime}
                   <br>Tickets Allotted: ${item.Alloted}
                   <br>Tickets Remaining: ${item.Remaining}
                   <br>${Remaining}
@@ -60,9 +60,6 @@ export interface ISPList {
     }, `<ul class="${styles.list}"><!--Items go here-->`) + "</ul>";}
 
   public render(): void {
-    let Name: String = undefined;
-    let Tickets: String = undefined;
-    let Special: String = undefined;
      this.domElement.innerHTML = `
       <div class="${styles.helloWorld}">
         <div class="${styles.container}">
@@ -75,11 +72,11 @@ export interface ISPList {
                 <span class="${styles.label}">Read Comp Ticket Policy</span>
               </a>
               <br>
-              <br>Name: <input type="text" name="Name">
+              <br>Name: <input type="text" id="UName">
               <br>
-              <br># of Tickets: <input type="text" name="Tickets">
+              <br># of Tickets: <input type="number" id="UTickets">
               <br>
-              <br>Special Requests: <input type="text" name="Special">
+              <br>Special Requests: <input type="text" id="USpecial">
               <br>
             </div>
           </div>
@@ -115,6 +112,9 @@ export interface ISPList {
     var arr = Array.from(this.domElement.querySelectorAll("button."+styles.button));
         arr.forEach(button=>button.addEventListener(
                  'click', (event) => this.updateItem(button.id)));
+                 arr.forEach(button=>button.addEventListener(                  
+                   'click', (event) => this.createItem(button.id)));
+                 
 }
 
 
@@ -161,7 +161,7 @@ export interface ISPList {
   
   private updateItem(id): void {
    
-   
+    let ITickets: any = document.getElementById("UTickets")["value"];
     let latestItemId: number = id;
     let etag: string = undefined;
     console.log(id);
@@ -172,8 +172,6 @@ export interface ISPList {
         if (latestItemId === -1) {
           throw new Error('No items found in the list');
         }
-
-        latestItemId = id;
           return pnp.sp.web.lists.getByTitle(this.properties.listName)
           .items.getById(latestItemId).get(undefined, {
             headers: {
@@ -188,7 +186,7 @@ export interface ISPList {
       .then((item: ISPList): Promise<ItemUpdateResult> => {
         return pnp.sp.web.lists.getByTitle(this.properties.listName)
           .items.getById(latestItemId).update({
-            'Remaining' : `${item.Remaining - 1}`
+            'Remaining' : `${item.Remaining - ITickets}`
           }, etag);
       })
       .then((result: ItemUpdateResult): void => {
@@ -201,5 +199,22 @@ export interface ISPList {
     return this.properties.listName === undefined ||
       this.properties.listName === null ||
       this.properties.listName.length === 0;
+  }
+private createItem(id): void {
+    console.log('Creating item...');
+    let IName: any = document.getElementById("UName")["value"];
+    let ITickets: any = document.getElementById("UTickets")["value"];
+    let ISpecial: any = document.getElementById("USpecial")["value"];
+    pnp.sp.web.lists.getByTitle(`Attendees`).items.add({
+      'Title': `Item ${new Date()}`,
+      'AttendeeName': `${IName}`,
+      'Seats': `${ITickets}`,
+      'SpecialRequests': `${ISpecial}`
+    }).then((result: ItemAddResult): void => {
+      const item: ISPList = result.data as ISPList;
+      console.log(`Item '${item.Title}' (ID: ${item.Id}) successfully created`);
+    }, (error: any): void => {
+      console.log('Error while creating the item: ' + error);
+    });
   }
 }
