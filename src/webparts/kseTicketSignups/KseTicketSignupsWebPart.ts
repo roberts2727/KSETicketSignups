@@ -60,17 +60,27 @@ export interface ISPList {
     }, `<ul class="${styles.list}"><!--Items go here-->`) + "</ul>";}
 
   public render(): void {
+    let Name: String = undefined;
+    let Tickets: String = undefined;
+    let Special: String = undefined;
      this.domElement.innerHTML = `
       <div class="${styles.helloWorld}">
         <div class="${styles.container}">
           <div class="ms-Grid-row ms-bgColor-themeDark ms-fontColor-white ${styles.row}">
             <div class="ms-Grid-col ms-u-lg10 ms-u-xl8 ms-u-xlPush2 ms-u-lgPush1">
-              <span class="ms-font-xl ms-fontColor-white">Welcome to KSE Ticket Signups!</span>
-              <p class="ms-font-l ms-fontColor-white">Choose a Game from the list of upcoming games to register.</p>
+              <span class="ms-font-xl ms-fontColor-white">Welcome to KSE Ticket Signups.</span>
+              <p class="ms-font-l ms-fontColor-white">Choose a Game from the list of upcoming games to register!</p>
               <p class="ms-font-l ms-fontColor-white">Loading from ${escape(this.context.pageContext.web.title)}</p>
               <a href="https://ksedev.sharepoint.com/sites/dev1/CDN/TicketPolicy.docx?d=w0f15f5b6f2a04939bd9085c694ea0bc1" class="${styles.button}">
                 <span class="${styles.label}">Read Comp Ticket Policy</span>
               </a>
+              <br>
+              <br>Name: <input type="text" name="Name">
+              <br>
+              <br># of Tickets: <input type="text" name="Tickets">
+              <br>
+              <br>Special Requests: <input type="text" name="Special">
+              <br>
             </div>
           </div>
         </div>  
