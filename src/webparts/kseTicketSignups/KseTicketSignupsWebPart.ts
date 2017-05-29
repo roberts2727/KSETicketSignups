@@ -49,7 +49,7 @@ export interface ISPList {
                        </button>`;
       if (item.Remaining <= 0) Remaining = 'Sorry, Game is Closed.';
       return html += `<li class="${styles.listItem}">
-                <span class="ms-font-l"><h4>${item.Title}</h4>
+                <span class="ms-font-l"><strong>${item.Title}</strong>
                   <br>${item.Day}
                   <br>${item.GameTime}
                   <br>Tickets Allotted: ${item.Alloted}
