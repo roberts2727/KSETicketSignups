@@ -29,7 +29,7 @@ export interface ISPList {
     Register:{Description: string, Url: string};
     Alloted: number;
     Remaining: number;
-    
+        
   }
   export default class KseTicketSignupsWebPart extends BaseClientSideWebPart<IKseTicketSignupsWebPartProps> {
    
@@ -50,6 +50,7 @@ export interface ISPList {
       if (item.Remaining <= 0) Remaining = 'Sorry, Game is Closed.';
       return html += `<li class="${styles.listItem}">
                 <span class="ms-font-l"><strong>${item.Title}</strong>
+                  <br>Game #${item.Id}
                   <br>${item.Day}
                   <br>${item.GameTime}
                   <br>Tickets Allotted: ${item.Alloted}
@@ -78,6 +79,7 @@ export interface ISPList {
               <br>
               <br>Special Requests: <input type="text" id="USpecial">
               <br>
+              <br>Flash Seats Account: <input type="text" id="UFlash">
             </div>
           </div>
         </div>  
@@ -205,14 +207,17 @@ private createItem(id): void {
     let IName: any = document.getElementById("UName")["value"];
     let ITickets: any = document.getElementById("UTickets")["value"];
     let ISpecial: any = document.getElementById("USpecial")["value"];
+    let IFlash: any = document.getElementById("UFlash")["value"];
     pnp.sp.web.lists.getByTitle(`Attendees`).items.add({
       'Title': `Item ${new Date()}`,
       'AttendeeName': `${IName}`,
       'Seats': `${ITickets}`,
-      'SpecialRequests': `${ISpecial}`
+      'SpecialRequests': `${ISpecial}`,
+      'FlashAccount': `${IFlash}`
     }).then((result: ItemAddResult): void => {
       const item: ISPList = result.data as ISPList;
-      console.log(`Item '${item.Title}' (ID: ${item.Id}) successfully created`);
+      alert(`${IName} has successfully registered for Game # ${id}`);
+      location.reload()
     }, (error: any): void => {
       console.log('Error while creating the item: ' + error);
     });
