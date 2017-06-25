@@ -26,12 +26,14 @@ export interface ISPList {
     Id: number;
     Day: string;
     GameTime: Date;
-    Register:{Description: string, Url: string};
     Alloted: number;
     Remaining: number;
-        
-  }
-  export default class KseTicketSignupsWebPart extends BaseClientSideWebPart<IKseTicketSignupsWebPartProps> {
+}
+
+export default class KseTicketSignupsWebPart extends BaseClientSideWebPart<IKseTicketSignupsWebPartProps> {
+  
+
+  
    
  
  private _getListItemData(): Promise<ISPLists> {
@@ -44,7 +46,8 @@ export interface ISPList {
       
    this.domElement.querySelector('#spListContainer').innerHTML = 
   items.reduce((html: string, item: ISPList) => {
-      let Register = `<button id="${item.Id}" button class="${styles.button} update-Button">
+
+            let Register = `<button id="${item.Id}" button class="${styles.button} update-Button">
                          Register!
                        </button>`;
       if (item.Remaining <= 0) Register = 'Sorry, Game is Closed.';
@@ -91,7 +94,9 @@ export interface ISPList {
           console.log(response.value);
           this.setButtonsEventHandlers();
           this.setButtonsState();
-                         
+          let siteGroups = pnp.sp.web.siteGroups.get().then(console.log);
+          let siteUsers = pnp.sp.web.siteUsers.get().then(console.log);    
+                     
         });
     }
     
@@ -166,7 +171,7 @@ export interface ISPList {
     let ITickets: any = document.getElementById("UTickets")["value"];
     let latestItemId: number = id;
     let etag: string = undefined;
-    console.log(id);
+    let currentItem: any = pnp.sp.web.lists.getByTitle(this.properties.listName).items.getById(latestItemId).select('Remaining').get();
     
 
     this.getLatestItemId()
@@ -175,7 +180,7 @@ export interface ISPList {
           throw new Error('No items found in the list');
         }
           return pnp.sp.web.lists.getByTitle(this.properties.listName)
-          .items.getById(latestItemId).get(undefined, {
+          .items.getById(id).get(undefined, {
             headers: {
               'Accept': 'application/json;odata=minimalmetadata'
             }
@@ -188,7 +193,7 @@ export interface ISPList {
       .then((item: ISPList): Promise<ItemUpdateResult> => {
         return pnp.sp.web.lists.getByTitle(this.properties.listName)
           .items.getById(latestItemId).update({
-            'Remaining' : `${item.Remaining - ITickets}`
+            'Remaining' :  `${item.Remaining - ITickets}`
           }, etag);
       })
       .then((result: ItemUpdateResult): void => {
