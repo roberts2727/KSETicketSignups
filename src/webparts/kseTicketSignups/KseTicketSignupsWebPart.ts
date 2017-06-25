@@ -31,11 +31,7 @@ export interface ISPList {
 }
 
 export default class KseTicketSignupsWebPart extends BaseClientSideWebPart<IKseTicketSignupsWebPartProps> {
-  
 
-  
-   
- 
  private _getListItemData(): Promise<ISPLists> {
    return this.context.spHttpClient.get(this.context.pageContext.web.absoluteUrl + `/_api/web/lists/GetByTitle('Games')/items`, SPHttpClient.configurations.v1)
       .then((response: SPHttpClientResponse) => {
@@ -91,15 +87,19 @@ export default class KseTicketSignupsWebPart extends BaseClientSideWebPart<IKseT
      this._getListItemData()
           .then((response) => {
           this._renderList(response.value);
-          console.log(response.value);
           this.setButtonsEventHandlers();
           this.setButtonsState();
-          let siteGroups = pnp.sp.web.siteGroups.get().then(console.log);
-          let siteUsers = pnp.sp.web.siteUsers.get().then(console.log);
+          this.getGroups();
                                
         });
     }
+  private getGroups(): void {
+    let groups = pnp.sp.web.siteGroups.get().then(console.log);
+    let users = pnp.sp.web.siteUsers.get().then(console.log);
     
+  }
+  
+
   private setButtonsState(): void {
     const buttons: NodeListOf<Element> = this.domElement.querySelectorAll(`button.${styles.button}`);
     const listNotConfigured: boolean = this.listNotConfigured();
