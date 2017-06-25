@@ -95,8 +95,8 @@ export default class KseTicketSignupsWebPart extends BaseClientSideWebPart<IKseT
           this.setButtonsEventHandlers();
           this.setButtonsState();
           let siteGroups = pnp.sp.web.siteGroups.get().then(console.log);
-          let siteUsers = pnp.sp.web.siteUsers.get().then(console.log);    
-                     
+          let siteUsers = pnp.sp.web.siteUsers.get().then(console.log);
+                               
         });
     }
     
@@ -171,9 +171,7 @@ export default class KseTicketSignupsWebPart extends BaseClientSideWebPart<IKseT
     let ITickets: any = document.getElementById("UTickets")["value"];
     let latestItemId: number = id;
     let etag: string = undefined;
-    let currentItem: any = pnp.sp.web.lists.getByTitle(this.properties.listName).items.getById(latestItemId).select('Remaining').get();
     
-
     this.getLatestItemId()
       .then((latestItemId: number): Promise<Item> => {
         if (latestItemId === -1) {
