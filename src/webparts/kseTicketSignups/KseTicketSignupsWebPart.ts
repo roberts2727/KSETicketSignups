@@ -44,10 +44,10 @@ export interface ISPList {
       
    this.domElement.querySelector('#spListContainer').innerHTML = 
   items.reduce((html: string, item: ISPList) => {
-      let Remaining = `<button id="${item.Id}" button class="${styles.button} update-Button">
+      let Register = `<button id="${item.Id}" button class="${styles.button} update-Button">
                          Register!
                        </button>`;
-      if (item.Remaining <= 0) Remaining = 'Sorry, Game is Closed.';
+      if (item.Remaining <= 0) Register = 'Sorry, Game is Closed.';
       return html += `<li class="${styles.listItem}">
                 <span class="ms-font-l"><strong>${item.Title}</strong>
                   <br>Game #${item.Id}
@@ -55,7 +55,7 @@ export interface ISPList {
                   <br>${item.GameTime}
                   <br>Tickets Allotted: ${item.Alloted}
                   <br>Tickets Remaining: ${item.Remaining}
-                  <br>${Remaining}
+                  <br>${Register}
                 </span>
             </li>`;
     }, `<ul class="${styles.list}"><!--Items go here-->`) + "</ul>";}
