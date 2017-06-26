@@ -94,8 +94,9 @@ export default class KseTicketSignupsWebPart extends BaseClientSideWebPart<IKseT
         });
     }
   private getGroups(): void {
-    let groups = pnp.sp.web.siteGroups.get().then(console.log);
+    let groups = pnp.sp.web.siteGroups.getByName('dev1 Owners').users.get().then(console.log);
     let users = pnp.sp.web.siteUsers.get().then(console.log);
+   
     
   }
   
